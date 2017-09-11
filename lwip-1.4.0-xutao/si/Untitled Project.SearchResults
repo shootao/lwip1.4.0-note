@@ -1,0 +1,20 @@
+---- snd_buf Matches (19 in 6 files) ----
+Api_lib.c (d:\lexin\info\lwip\lwip-1.4.0\src\api):            snd_queue or snd_buf */
+Opt.h (d:\lexin\info\lwip\lwip-1.4.0\src\include\lwip): * TCP snd_buf for select to return writable (combined with TCP_SNDQUEUELOWAT).
+Tcp.c (d:\lexin\info\lwip\lwip-1.4.0\src\core):    pcb->snd_buf = TCP_SND_BUF;/*可使用缓冲区的大小（tcp发送数据缓冲区剩余大小）*/
+Tcp.h (d:\lexin\info\lwip\lwip-1.4.0\src\include\lwip):  u16_t snd_buf;   /* Available buffer space for sending (in bytes).可以使用的缓冲区大小 */
+Tcp.h (d:\lexin\info\lwip\lwip-1.4.0\src\include\lwip):#define          tcp_sndbuf(pcb)          ((pcb)->snd_buf)
+Tcp_in.c (d:\lexin\info\lwip\lwip-1.4.0\src\core):      pcb->snd_buf++;
+Tcp_in.c (d:\lexin\info\lwip\lwip-1.4.0\src\core):      pcb->snd_buf += pcb->acked;
+Tcp_out.c (d:\lexin\info\lwip\lwip-1.4.0\src\core):/** Checks if tcp_write is allowed or not (checks state, snd_buf and snd_queuelen).
+Tcp_out.c (d:\lexin\info\lwip\lwip-1.4.0\src\core): * @param len length of data to send (checked agains snd_buf)
+Tcp_out.c (d:\lexin\info\lwip\lwip-1.4.0\src\core):  if (len > pcb->snd_buf) {/*长度不能大于可使用缓存区的大小*/
+Tcp_out.c (d:\lexin\info\lwip\lwip-1.4.0\src\core):    LWIP_DEBUGF(TCP_OUTPUT_DEBUG | 3, ("tcp_write: too much data (len=%"U16_F" > snd_buf=%"U16_F")\n",
+Tcp_out.c (d:\lexin\info\lwip\lwip-1.4.0\src\core):      len, pcb->snd_buf));
+Tcp_out.c (d:\lexin\info\lwip\lwip-1.4.0\src\core):  pcb->snd_buf -= len;
+Tcp_out.c (d:\lexin\info\lwip\lwip-1.4.0\src\core):   * We need one available snd_buf byte to do that.
+Tcp_out.c (d:\lexin\info\lwip\lwip-1.4.0\src\core):   * This means we can't send FIN while snd_buf==0. A better fix would be to
+Tcp_out.c (d:\lexin\info\lwip\lwip-1.4.0\src\core):   * not include SYN and FIN sequence numbers in the snd_buf count. */
+Tcp_out.c (d:\lexin\info\lwip\lwip-1.4.0\src\core):  if (pcb->snd_buf == 0) {
+Tcp_out.c (d:\lexin\info\lwip\lwip-1.4.0\src\core):    /* optlen does not influence snd_buf */
+Tcp_out.c (d:\lexin\info\lwip\lwip-1.4.0\src\core):    pcb->snd_buf--;
